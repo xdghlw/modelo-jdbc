@@ -17,8 +17,7 @@ public class DaoCarro {
     Connection con = null;
     PreparedStatement pstm = null;
 
-public List<Carro> getCarros()
-{
+public List<Carro> getCarros() {
     List<Carro> lista = new ArrayList<Carro>();
     ResultSet rs = null;
     con = new Conexao().conectaBanco();
@@ -36,7 +35,6 @@ public List<Carro> getCarros()
              c.setModelo(rs.getString("modelo"));
              c.setMarca(rs.getString("marca"));
              c.setAno(rs.getInt("ano"));
-             
              
              lista.add(c);
             
@@ -66,8 +64,7 @@ public List<Carro> getCarros()
 }
       
     
-public void salvarCarro(Carro car)
-{
+public void salvarCarro(Carro car) {
     con = new Conexao().conectaBanco();
     
     try{
@@ -80,8 +77,7 @@ public void salvarCarro(Carro car)
     
     pstm.close();
     }
-    catch(SQLException erro)
-    {
+    catch(SQLException erro) {
         JOptionPane.showMessageDialog(null, "Erro ao salvar carro no BD "+erro);
     }
     finally{

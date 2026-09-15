@@ -20,18 +20,16 @@ public class FrmCadCarro extends javax.swing.JFrame {
     DaoCarro dao = new DaoCarro();
     
     List<Carro> lista = dao.getCarros();
-    int indice =0;
+    int indice = 0;
 
     /**
      * Creates new form FrmCadCarro
      */
     public FrmCadCarro() {
         initComponents();
-        if(lista.isEmpty())
-        {
+        if(lista.isEmpty()) {
             desabilitarTodosBotoes();
         }
-        txtId.setEnabled(false);
         mostrarDadosTela();
     }
 
@@ -60,16 +58,15 @@ public class FrmCadCarro extends javax.swing.JFrame {
         btnUltimo = new javax.swing.JButton();
         lblId = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
+        txtId.setEnabled(false);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setFont(new java.awt.Font("ITF Devanagari", 1, 18)); // NOI18N
+        lblId.setText("ID:");
         lblTitulo.setText("Cadastro de Carro");
-
         lblModelo.setText("Modelo:");
-
         lblMarca.setText("Marca:");
-
         lblAno.setText("Ano:");
 
         btnSalvar.setText("Salvar");
@@ -120,8 +117,6 @@ public class FrmCadCarro extends javax.swing.JFrame {
                 btnUltimoActionPerformed(evt);
             }
         });
-
-        lblId.setText("ID:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -205,13 +200,13 @@ public class FrmCadCarro extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
 
-        Carro meucarro = new Carro();
+        Carro meuCarro = new Carro();
 
-        meucarro.setModelo(txtModelo.getText());
-        meucarro.setMarca(txtMarca.getText());
-        meucarro.setAno(Integer.parseInt(txtAno.getText()));
+        meuCarro.setModelo(txtModelo.getText());
+        meuCarro.setMarca(txtMarca.getText());
+        meuCarro.setAno(Integer.parseInt(txtAno.getText()));
 
-        dao.salvarCarro(meucarro);
+        dao.salvarCarro(meuCarro);
         
         JOptionPane.showMessageDialog(this, "Carro salvo com sucesso!!!");
         lista.clear();
@@ -251,7 +246,7 @@ public class FrmCadCarro extends javax.swing.JFrame {
                         + lista.get(pos).toString(), "Excluir", JOptionPane.YES_NO_OPTION);
                 if (remover == JOptionPane.YES_OPTION) {
                     //lista.remove(pos);
-                    JOptionPane.showMessageDialog(null, pos);
+                    // JOptionPane.showMessageDialog(null, pos);
                     dao.exlcuirCarro(lista.get(pos).getId());
                     lista.clear();
                     lista = dao.getCarros();
@@ -261,7 +256,6 @@ public class FrmCadCarro extends javax.swing.JFrame {
                     {
                         limparCampos();
                         desabilitarTodosBotoes();
-
                     }
                     else
                     {
@@ -396,13 +390,17 @@ public class FrmCadCarro extends javax.swing.JFrame {
     private javax.swing.JTextField txtModelo;
     // End of variables declaration//GEN-END:variables
 
-public void mostrarDadosTela()
-{
-        txtId.setText(""+lista.get(indice).getId());
-        txtModelo.setText(lista.get(indice).getModelo());
-        txtMarca.setText(lista.get(indice).getMarca());
-        txtAno.setText(""+lista.get(indice).getAno());
+public void mostrarDadosTela() {
+        try {
+            txtId.setText(""+lista.get(indice).getId());
+            txtModelo.setText(lista.get(indice).getModelo());
+            txtMarca.setText(lista.get(indice).getMarca());
+            txtAno.setText(""+lista.get(indice).getAno());
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Não existem carros cadastrados.");
+        }
 }
+
 public void limparCampos()
 {
         txtId.setText("");
