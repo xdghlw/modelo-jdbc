@@ -17,10 +17,9 @@ import dao.DaoCarro;
 public class FrmCadCarro extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmCadCarro.class.getName());
-    DaoCarro dao = new DaoCarro();
-    
-    List<Carro> lista = dao.getCarros();
-    int indice = 0;
+    private DaoCarro dao = new DaoCarro();
+    private List<Carro> lista = dao.getCarros();
+    private int indice = 0;
 
     /**
      * Creates new form FrmCadCarro

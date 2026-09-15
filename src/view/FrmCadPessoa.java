@@ -7,6 +7,8 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+
+import dao.DaoPessoa;
 import model.Pessoa;
 
 /**
@@ -16,8 +18,9 @@ import model.Pessoa;
 public class FrmCadPessoa extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmCadPessoa.class.getName());
-    List<Pessoa> lista = new ArrayList<Pessoa>();
-    int indice = 0;
+    private DaoPessoa dao = new DaoPessoa();
+    private List<Pessoa> lista = dao.getPessoas();
+    private int indice = 0;
 
     /**
      * Creates new form FrmCadPessoa
@@ -194,16 +197,27 @@ public class FrmCadPessoa extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+
         Pessoa fulano = new Pessoa();
 
         fulano.setNome(txtNome.getText());
         fulano.setCpf(txtCpf.getText());
         fulano.setIdade((int) txtIdade.getValue());
-
-        lista.add(fulano);
+        dao.salvarPessoa(fulano);
 
         JOptionPane.showMessageDialog(this, "Pessoa salva com sucesso!!!");
 
+        lista.clear();
+        lista = dao.getPessoas();
+
+        if (lista.size()-1 == 0) {
+            btnPrimeiro.setEnabled(true);
+            btnUltimo.setEnabled(true);
+        }
+        else {
+            btnAnterior.setEnabled(true);
+        }
+        
         indice = lista.size() - 1;
         mostrarDadosTela();
     }//GEN-LAST:event_btnSalvarActionPerformed
