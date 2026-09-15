@@ -24,6 +24,7 @@ public class FrmCadPessoa extends javax.swing.JFrame {
      */
     public FrmCadPessoa() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**

@@ -24,6 +24,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
      */
     public FrmCadProduto() {
         initComponents();
+        setLocationRelativeTo(null);
         desabilitarTodosBotoes();
     }
 

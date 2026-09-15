@@ -27,6 +27,8 @@ public class FrmCadCarro extends javax.swing.JFrame {
      */
     public FrmCadCarro() {
         initComponents();
+        setLocationRelativeTo(null);
+
         if(lista.isEmpty()) {
             desabilitarTodosBotoes();
         }
