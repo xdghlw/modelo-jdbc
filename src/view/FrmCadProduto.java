@@ -7,8 +7,8 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import model.Carro;
 import model.Produto;
+import dao.DaoProduto;
 
 /**
  *
@@ -17,7 +17,8 @@ import model.Produto;
 public class FrmCadProduto extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmCadProduto.class.getName());
-    List<Produto> lista = new ArrayList<Produto>();
+    DaoProduto dao = new DaoProduto();
+    List<Produto> lista = dao.getProdutos();
     int indice = 0;
     /**
      * Creates new form FrmCadProduto
@@ -25,7 +26,11 @@ public class FrmCadProduto extends javax.swing.JFrame {
     public FrmCadProduto() {
         initComponents();
         setLocationRelativeTo(null);
-        desabilitarTodosBotoes();
+        if (lista.isEmpty()) {
+            desabilitarTodosBotoes();
+        }
+        mostrarDadosTela();
+    
     }
 
     /**
@@ -40,6 +45,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
         lblTitulo = new javax.swing.JLabel();
         lblDescricao = new javax.swing.JLabel();
         lblQuantidade = new javax.swing.JLabel();
+        lblId = new javax.swing.JLabel();
         lblValor = new javax.swing.JLabel();
         txtDescricao = new javax.swing.JTextField();
         spnQuantidade = new javax.swing.JSpinner();
@@ -51,8 +57,12 @@ public class FrmCadProduto extends javax.swing.JFrame {
         btnAnterior = new javax.swing.JButton();
         btnProximo = new javax.swing.JButton();
         btnUltimo = new javax.swing.JButton();
+        txtId = new javax.swing.JTextField();
+        txtId.setEnabled(false);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        lblId.setText("Id: ");
 
         lblTitulo.setText("Cadastro de Produto");
 
@@ -117,6 +127,11 @@ public class FrmCadProduto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblId)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblDescricao)
@@ -160,6 +175,10 @@ public class FrmCadProduto extends javax.swing.JFrame {
                 .addComponent(lblTitulo)
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblId)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDescricao)
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -192,29 +211,30 @@ public class FrmCadProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        Produto prod = new Produto();
+        try {
+            Produto prod = new Produto();
+            prod.setDescricao(txtDescricao.getText());
+            prod.setQuantidade((int)spnQuantidade.getValue());
+            prod.setValor(Double.parseDouble(txtValor.getText()));
 
-        prod.setDescricao(txtDescricao.getText());
-        prod.setQuantidade((int)spnQuantidade.getValue());
-        prod.setValor(Double.parseDouble(txtValor.getText()));
-
-        lista.add(prod);
-        
-        JOptionPane.showMessageDialog(this, "Produto salvo com sucesso!!!");
-        
-        if(lista.size()-1 == 0)
-        {
-            btnPrimeiro.setEnabled(true);
-            btnUltimo.setEnabled(true);
+            dao.salvarProduto(prod);
+            lista.clear();
+            lista = dao.getProdutos();
+            
+            System.out.println("Produto salvo com sucesso: " + prod.toString());
+            
+            if (lista.size() - 1 == 0) {
+                btnPrimeiro.setEnabled(true);
+                btnUltimo.setEnabled(true);
+            }
+            else {
+                btnAnterior.setEnabled(true);
+            }
+            indice = lista.size() - 1;
+            mostrarDadosTela();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar produto!!!");
         }
-        else
-        {
-            btnAnterior.setEnabled(true);
-        }
-        
-        indice = lista.size()-1;
-        mostrarDadosTela();
-
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -230,6 +250,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
                 int remover = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja apagar:\n"
                         + lista.get(pos).toString(), "Excluir", JOptionPane.YES_NO_OPTION);
                 if (remover == JOptionPane.YES_OPTION) {
+                    dao.excluirProduto(lista.get(pos).getId());
                     lista.remove(pos);
                     if(lista.isEmpty())
                     {
@@ -355,6 +376,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
     private javax.swing.JButton btnProximo;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JButton btnUltimo;
+    private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblDescricao;
     private javax.swing.JLabel lblQuantidade;
     private javax.swing.JLabel lblTitulo;
@@ -362,14 +384,21 @@ public class FrmCadProduto extends javax.swing.JFrame {
     private javax.swing.JSpinner spnQuantidade;
     private javax.swing.JTextField txtDescricao;
     private javax.swing.JTextField txtValor;
+    private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 public void mostrarDadosTela() {
-        txtDescricao.setText(lista.get(indice).getDescricao());
-        spnQuantidade.setValue(lista.get(indice).getQuantidade());
-        txtValor.setText(""+lista.get(indice).getValor());
+        try {
+            txtId.setText(""+lista.get(indice).getId());    
+            txtDescricao.setText(lista.get(indice).getDescricao());
+            spnQuantidade.setValue(lista.get(indice).getQuantidade());
+            txtValor.setText(""+lista.get(indice).getValor());
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Erro ao mostrar dados na tela: " + e.getMessage());
+        }
     }
 
     public void limparCampos() {
+        txtId.setText("");
         txtDescricao.setText("");
         spnQuantidade.setValue(0);
         txtValor.setText("");

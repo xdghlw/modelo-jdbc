@@ -7,6 +7,8 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+
+import dao.DaoPessoa;
 import model.Pessoa;
 
 /**
@@ -16,8 +18,9 @@ import model.Pessoa;
 public class FrmCadPessoa extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmCadPessoa.class.getName());
-    List<Pessoa> lista = new ArrayList<Pessoa>();
-    int indice = 0;
+    private DaoPessoa dao = new DaoPessoa();
+    private List<Pessoa> lista = dao.getPessoas();
+    private int indice = 0;
 
     /**
      * Creates new form FrmCadPessoa
@@ -25,6 +28,10 @@ public class FrmCadPessoa extends javax.swing.JFrame {
     public FrmCadPessoa() {
         initComponents();
         setLocationRelativeTo(null);
+        if(lista.isEmpty()) {
+            desabilitarTodosBotoes();
+        }
+        mostrarDadosTela();
     }
 
     /**
@@ -194,26 +201,35 @@ public class FrmCadPessoa extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+
         Pessoa fulano = new Pessoa();
 
         fulano.setNome(txtNome.getText());
-        fulano.setCpf(txtCpf.getText());
+        fulano.setCpf(txtCpf.getText().replace(".", "").replace("-", ""));
         fulano.setIdade((int) txtIdade.getValue());
 
-        lista.add(fulano);
+        dao.salvarPessoa(fulano);
+        lista.clear();
+        lista = dao.getPessoas();
 
-        JOptionPane.showMessageDialog(this, "Pessoa salva com sucesso!!!");
-
+        if (lista.size()-1 == 0) {
+            btnPrimeiro.setEnabled(true);
+            btnUltimo.setEnabled(true);
+        }
+        else {
+            btnAnterior.setEnabled(true);
+        }
+        
         indice = lista.size() - 1;
         mostrarDadosTela();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         if (!lista.isEmpty()) {
-            String nome = txtNome.getText();
+            String cpf = txtCpf.getText().replace(".", "").replace("-", "");
             int pos = -1;
             for (int i = 0; i < lista.size(); i++) {
-                if (nome.equals(lista.get(i).getNome())) {
+                if (cpf.equals(lista.get(i).getCpf())) {
                     pos = i;
                 }
             }
@@ -221,17 +237,17 @@ public class FrmCadPessoa extends javax.swing.JFrame {
                 int remover = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja apagar essa pessoa:\n"
                         + lista.get(pos).toString(), "Excluir", JOptionPane.YES_NO_OPTION);
                 if (remover == JOptionPane.YES_OPTION) {
-                    lista.remove(pos);
+                    dao.excluirPessoa(lista.get(pos).getCpf());
+                    lista.clear();
+                    lista = dao.getPessoas();
+                    indice = 0;
+                    mostrarDadosTela();
                     if (lista.isEmpty()) {
                         limparCampos();
-                    } else {
-                        indice = 0;
-                        mostrarDadosTela();
                     }
-
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "O Nome pesquisado não se encontra na lista");
+                JOptionPane.showMessageDialog(this, "O CPF pesquisado não se encontra na lista");
             }
 
         } else {
@@ -266,7 +282,28 @@ public class FrmCadPessoa extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Você já está na última pessoa");
         }
     }//GEN-LAST:event_btnProximoActionPerformed
+    
+    public void mostrarDadosTela() {
+        try {
+            txtNome.setText(lista.get(indice).getNome());
+            txtCpf.setText(lista.get(indice).getCpf());
+            txtIdade.setValue(lista.get(indice).getIdade());
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Erro ao mostrar dados na tela: " + e.getMessage());
+        }
+    }
 
+    public void limparCampos() {
+        txtNome.setText("");
+        txtCpf.setText("");
+        txtIdade.setValue(0);
+    }
+    public void desabilitarTodosBotoes() {
+        btnPrimeiro.setEnabled(false);
+        btnUltimo.setEnabled(false);
+        btnProximo.setEnabled(false);
+        btnAnterior.setEnabled(false);
+}
     /**
      * @param args the command line arguments
      */
@@ -309,23 +346,5 @@ public class FrmCadPessoa extends javax.swing.JFrame {
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
 
-    public void mostrarDadosTela() {
-        txtNome.setText(lista.get(indice).getNome());
-        txtCpf.setText(lista.get(indice).getCpf());
-        txtIdade.setValue(lista.get(indice).getIdade());
-    }
-
-    public void limparCampos() {
-        txtNome.setText("");
-        txtCpf.setText("");
-        txtIdade.setValue(0);
-    }
-    public void desabilitarTodosBotoes()
-{
-    btnPrimeiro.setEnabled(false);
-    btnUltimo.setEnabled(false);
-    btnProximo.setEnabled(false);
-    btnAnterior.setEnabled(false);
-}
 
 }
