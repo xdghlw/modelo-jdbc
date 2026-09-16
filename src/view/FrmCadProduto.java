@@ -45,6 +45,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
         lblTitulo = new javax.swing.JLabel();
         lblDescricao = new javax.swing.JLabel();
         lblQuantidade = new javax.swing.JLabel();
+        lblId = new javax.swing.JLabel();
         lblValor = new javax.swing.JLabel();
         txtDescricao = new javax.swing.JTextField();
         spnQuantidade = new javax.swing.JSpinner();
@@ -56,8 +57,12 @@ public class FrmCadProduto extends javax.swing.JFrame {
         btnAnterior = new javax.swing.JButton();
         btnProximo = new javax.swing.JButton();
         btnUltimo = new javax.swing.JButton();
+        txtId = new javax.swing.JTextField();
+        txtId.setEditable(false);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        lblId.setText("Id: ");
 
         lblTitulo.setText("Cadastro de Produto");
 
@@ -122,6 +127,11 @@ public class FrmCadProduto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblId)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblDescricao)
@@ -164,6 +174,10 @@ public class FrmCadProduto extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(lblTitulo)
                 .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblId)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDescricao)
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -236,7 +250,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
                 int remover = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja apagar:\n"
                         + lista.get(pos).toString(), "Excluir", JOptionPane.YES_NO_OPTION);
                 if (remover == JOptionPane.YES_OPTION) {
-                    dao.excluirProduto(lista.get(pos));
+                    dao.excluirProduto(lista.get(pos).getId());
                     lista.remove(pos);
                     if(lista.isEmpty())
                     {
@@ -362,6 +376,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
     private javax.swing.JButton btnProximo;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JButton btnUltimo;
+    private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblDescricao;
     private javax.swing.JLabel lblQuantidade;
     private javax.swing.JLabel lblTitulo;
@@ -369,9 +384,11 @@ public class FrmCadProduto extends javax.swing.JFrame {
     private javax.swing.JSpinner spnQuantidade;
     private javax.swing.JTextField txtDescricao;
     private javax.swing.JTextField txtValor;
+    private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 public void mostrarDadosTela() {
         try {
+            txtId.setText(""+lista.get(indice).getId());    
             txtDescricao.setText(lista.get(indice).getDescricao());
             spnQuantidade.setValue(lista.get(indice).getQuantidade());
             txtValor.setText(""+lista.get(indice).getValor());
@@ -381,6 +398,7 @@ public void mostrarDadosTela() {
     }
 
     public void limparCampos() {
+        txtId.setText("");
         txtDescricao.setText("");
         spnQuantidade.setValue(0);
         txtValor.setText("");

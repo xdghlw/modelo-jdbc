@@ -12,7 +12,6 @@ import model.Produto;
 
 
 public class DaoProduto {
-    
    
     Connection con = null;
     PreparedStatement pstm = null;
@@ -22,15 +21,15 @@ public List<Produto> getProdutos() {
     ResultSet rs = null;
     con = new Conexao().conectaBanco();
     
-    try{
+    try {
   
     pstm = con.prepareStatement("SELECT * FROM tb_produto", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     
     rs =  this.pstm.executeQuery();
-    if(rs.first())
-    {
+    if(rs.first()) {
         do {
              Produto p = new Produto();
+             p.setId(rs.getInt("id"));
              p.setDescricao(rs.getString("descricao"));             
              p.setQuantidade(rs.getInt("quantidade"));             
              p.setValor(rs.getInt("valor"));             
@@ -42,18 +41,16 @@ public List<Produto> getProdutos() {
     pstm.close();
   
     }   
-    catch(SQLException erro)
-    {
+    catch(SQLException erro) {
         JOptionPane.showMessageDialog(null, "Erro ao buscar dados no BD "+erro);
     }
     
     
-    finally{
-        try{
+    finally {
+        try {
         con.close();
         }
-        catch(SQLException err)
-        {
+        catch(SQLException err) {
             JOptionPane.showMessageDialog(null, "Erro ao fechar a conexão de busca "+err);
         }
     }
@@ -65,7 +62,7 @@ public List<Produto> getProdutos() {
 public void salvarProduto(Produto prod) {
     con = new Conexao().conectaBanco();
     
-    try{
+    try {
     pstm = con.prepareStatement("INSERT INTO tb_produto (descricao,quantidade,valor) VALUES (?,?,?)");
     pstm.setString(1,prod.getDescricao());
     pstm.setInt(2,prod.getQuantidade());
