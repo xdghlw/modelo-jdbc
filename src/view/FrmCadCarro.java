@@ -17,10 +17,9 @@ import dao.DaoCarro;
 public class FrmCadCarro extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmCadCarro.class.getName());
-    DaoCarro dao = new DaoCarro();
-    
-    List<Carro> lista = dao.getCarros();
-    int indice = 0;
+    private DaoCarro dao = new DaoCarro();
+    private List<Carro> lista = dao.getCarros();
+    private int indice = 0;
 
     /**
      * Creates new form FrmCadCarro
@@ -247,8 +246,6 @@ public class FrmCadCarro extends javax.swing.JFrame {
                 int remover = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja apagar:\n"
                         + lista.get(pos).toString(), "Excluir", JOptionPane.YES_NO_OPTION);
                 if (remover == JOptionPane.YES_OPTION) {
-                    //lista.remove(pos);
-                    // JOptionPane.showMessageDialog(null, pos);
                     dao.exlcuirCarro(lista.get(pos).getId());
                     lista.clear();
                     lista = dao.getCarros();
