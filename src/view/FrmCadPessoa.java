@@ -28,10 +28,7 @@ public class FrmCadPessoa extends javax.swing.JFrame {
     public FrmCadPessoa() {
         initComponents();
         setLocationRelativeTo(null);
-        if(lista.isEmpty()) {
-            desabilitarTodosBotoes();
-        }
-        mostrarDadosTela();
+        atualizarInterface();
     }
 
     /**
@@ -198,6 +195,8 @@ public class FrmCadPessoa extends javax.swing.JFrame {
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         limparCampos();
+        indice = -1;
+        atualizarInterface();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
@@ -211,17 +210,9 @@ public class FrmCadPessoa extends javax.swing.JFrame {
         dao.salvarPessoa(fulano);
         lista.clear();
         lista = dao.getPessoas();
-
-        if (lista.size()-1 == 0) {
-            btnPrimeiro.setEnabled(true);
-            btnUltimo.setEnabled(true);
-        }
-        else {
-            btnAnterior.setEnabled(true);
-        }
         
         indice = lista.size() - 1;
-        mostrarDadosTela();
+        atualizarInterface();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -240,11 +231,8 @@ public class FrmCadPessoa extends javax.swing.JFrame {
                     dao.excluirPessoa(lista.get(pos).getCpf());
                     lista.clear();
                     lista = dao.getPessoas();
-                    indice = 0;
-                    mostrarDadosTela();
-                    if (lista.isEmpty()) {
-                        limparCampos();
-                    }
+                    indice = lista.size() - 1;
+                    atualizarInterface();
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "O CPF pesquisado não se encontra na lista");
@@ -257,18 +245,18 @@ public class FrmCadPessoa extends javax.swing.JFrame {
 
     private void btnPrimeiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeiroActionPerformed
         indice = 0;
-        mostrarDadosTela();
+        atualizarInterface();
     }//GEN-LAST:event_btnPrimeiroActionPerformed
 
     private void btnUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUltimoActionPerformed
         indice = lista.size() - 1;
-        mostrarDadosTela();
+        atualizarInterface();
     }//GEN-LAST:event_btnUltimoActionPerformed
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
         if (indice > 0) {
             indice--;
-            mostrarDadosTela();
+            atualizarInterface();
         } else {
             JOptionPane.showMessageDialog(this, "Você já está na primeira pessoa");
         }
@@ -277,7 +265,7 @@ public class FrmCadPessoa extends javax.swing.JFrame {
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
         if (indice < lista.size() - 1) {
             indice++;
-            mostrarDadosTela();
+            atualizarInterface();
         } else {
             JOptionPane.showMessageDialog(this, "Você já está na última pessoa");
         }
@@ -303,7 +291,39 @@ public class FrmCadPessoa extends javax.swing.JFrame {
         btnUltimo.setEnabled(false);
         btnProximo.setEnabled(false);
         btnAnterior.setEnabled(false);
-}
+    }
+
+    public void atualizarInterface() {
+        if (lista.isEmpty()) {
+            limparCampos();
+            desabilitarTodosBotoes();
+        } else if (indice < 0 && lista.size() >= 1) {
+            btnPrimeiro.setEnabled(false);
+            btnAnterior.setEnabled(false);
+            btnProximo.setEnabled(true);
+            btnUltimo.setEnabled(true);
+        } else if (indice < 0) {
+            desabilitarTodosBotoes();
+        } else if (indice == 0 && lista.size() == 1) {
+            desabilitarTodosBotoes();
+        } else if (indice == 0) {
+            btnPrimeiro.setEnabled(false);
+            btnAnterior.setEnabled(false);
+            btnProximo.setEnabled(true);
+            btnUltimo.setEnabled(true);
+        } else if (indice == lista.size() - 1) {
+            btnPrimeiro.setEnabled(true);
+            btnAnterior.setEnabled(true);
+            btnProximo.setEnabled(false);
+            btnUltimo.setEnabled(false);
+        } else {
+            btnPrimeiro.setEnabled(true);
+            btnAnterior.setEnabled(true);
+            btnProximo.setEnabled(true);
+            btnUltimo.setEnabled(true);
+        }
+        mostrarDadosTela();
+    }
     /**
      * @param args the command line arguments
      */
