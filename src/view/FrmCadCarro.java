@@ -27,11 +27,7 @@ public class FrmCadCarro extends javax.swing.JFrame {
     public FrmCadCarro() {
         initComponents();
         setLocationRelativeTo(null);
-
-        if(lista.isEmpty()) {
-            desabilitarTodosBotoes();
-        }
-        mostrarDadosTela();
+        atualizarInterface();
     }
 
     /**
@@ -213,24 +209,16 @@ public class FrmCadCarro extends javax.swing.JFrame {
         lista.clear();
         lista = dao.getCarros();
         
-        if(lista.size()-1 == 0)
-        {
-            btnPrimeiro.setEnabled(true);
-            btnUltimo.setEnabled(true);
-        }
-        else
-        {
-            btnAnterior.setEnabled(true);
-        }
-        
         indice = lista.size()-1;
-        mostrarDadosTela();
+        atualizarInterface();
 
 
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         limparCampos();
+        indice = -1;
+        atualizarInterface();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -249,24 +237,8 @@ public class FrmCadCarro extends javax.swing.JFrame {
                     dao.exlcuirCarro(lista.get(pos).getId());
                     lista.clear();
                     lista = dao.getCarros();
-                    indice = 0;
-                    mostrarDadosTela();
-                    if(lista.isEmpty())
-                    {
-                        limparCampos();
-                        desabilitarTodosBotoes();
-                    }
-                    else
-                    {
-                        btnAnterior.setEnabled(false);
-                        if(lista.size()-1 == 0)
-                        {
-                           btnProximo.setEnabled(false);
-                        }
-                        indice=0;
-                        mostrarDadosTela();
-                    }
-                    
+                    indice = lista.size() - 1;
+                    atualizarInterface();
                 }
                 //pos = -1;
             } else {
@@ -280,49 +252,19 @@ public class FrmCadCarro extends javax.swing.JFrame {
 
     private void btnPrimeiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeiroActionPerformed
         indice = 0;
-        mostrarDadosTela();
-        btnAnterior.setEnabled(false);
-        if(lista.size()-1 != 0)
-        {
-                btnProximo.setEnabled(true);
-        }
-        else
-        {
-             btnProximo.setEnabled(false);
-        }
-        
-       
+        atualizarInterface();
     }//GEN-LAST:event_btnPrimeiroActionPerformed
 
     private void btnUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUltimoActionPerformed
         indice = lista.size()-1;
-        mostrarDadosTela();
-        btnProximo.setEnabled(false);
-        if(lista.size()-1 != 0)
-        {
-            btnAnterior.setEnabled(true);
-        }
-        else
-        {
-            btnAnterior.setEnabled(false);
-        }
-        
+        atualizarInterface();
     }//GEN-LAST:event_btnUltimoActionPerformed
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
         if(indice>0)
         {
             indice--;
-            mostrarDadosTela();
-            if(indice==0)
-            {
-                btnAnterior.setEnabled(false);
-                
-            }
-            if(lista.size()-1 != 0)
-            {
-                    btnProximo.setEnabled(true);
-            }
+            atualizarInterface();
         }
        
     }//GEN-LAST:event_btnAnteriorActionPerformed
@@ -331,16 +273,7 @@ public class FrmCadCarro extends javax.swing.JFrame {
         if(indice<lista.size()-1)
         {
             indice++;
-            mostrarDadosTela();
-            if(indice==lista.size()-1)
-            {
-                btnProximo.setEnabled(false);
-                
-            }
-            if(lista.size()-1 != 0)
-            {
-                btnAnterior.setEnabled(true);
-            }
+            atualizarInterface();
         }
         
     }//GEN-LAST:event_btnProximoActionPerformed
@@ -413,6 +346,39 @@ public void desabilitarTodosBotoes()
     btnUltimo.setEnabled(false);
     btnProximo.setEnabled(false);
     btnAnterior.setEnabled(false);
+}
+
+public void atualizarInterface()
+{
+    if (lista.isEmpty()) {
+        limparCampos();
+        desabilitarTodosBotoes();
+    } else if (indice < 0 && lista.size() >= 1) {
+        btnPrimeiro.setEnabled(false);
+        btnAnterior.setEnabled(false);
+        btnProximo.setEnabled(true);
+        btnUltimo.setEnabled(true);
+    } else if (indice < 0) {
+        desabilitarTodosBotoes();
+    } else if (indice == 0 && lista.size() == 1) {
+        desabilitarTodosBotoes();
+    } else if (indice == 0) {
+        btnPrimeiro.setEnabled(false);
+        btnAnterior.setEnabled(false);
+        btnProximo.setEnabled(true);
+        btnUltimo.setEnabled(true);
+    } else if (indice == lista.size() - 1) {
+        btnPrimeiro.setEnabled(true);
+        btnAnterior.setEnabled(true);
+        btnProximo.setEnabled(false);
+        btnUltimo.setEnabled(false);
+    } else {
+        btnPrimeiro.setEnabled(true);
+        btnAnterior.setEnabled(true);
+        btnProximo.setEnabled(true);
+        btnUltimo.setEnabled(true);
+    }
+    mostrarDadosTela();
 }
 
 }

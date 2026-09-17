@@ -26,11 +26,8 @@ public class FrmCadProduto extends javax.swing.JFrame {
     public FrmCadProduto() {
         initComponents();
         setLocationRelativeTo(null);
-        if (lista.isEmpty()) {
-            desabilitarTodosBotoes();
-        }
+        atualizarInterface();
         mostrarDadosTela();
-    
     }
 
     /**
@@ -42,6 +39,7 @@ public class FrmCadProduto extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        
         lblTitulo = new javax.swing.JLabel();
         lblDescricao = new javax.swing.JLabel();
         lblQuantidade = new javax.swing.JLabel();
@@ -58,89 +56,90 @@ public class FrmCadProduto extends javax.swing.JFrame {
         btnProximo = new javax.swing.JButton();
         btnUltimo = new javax.swing.JButton();
         txtId = new javax.swing.JTextField();
-        txtId.setEnabled(false);
-
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
+        
+        txtId.setEnabled(false);
         lblId.setText("Id: ");
-
+        
         lblTitulo.setText("Cadastro de Produto");
-
+        
         lblDescricao.setText("Descrição:");
-
+        
         lblQuantidade.setText("Quantidade:");
-
+        
         lblValor.setText("Valor:");
-
+        
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoActionPerformed(evt);
             }
         });
-
+        
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalvarActionPerformed(evt);
             }
         });
-
+        
         btnExcluir.setText("Excluir");
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
             }
         });
-
+        
         btnPrimeiro.setText("|<");
         btnPrimeiro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrimeiroActionPerformed(evt);
             }
         });
-
+        
         btnAnterior.setText("<<");
         btnAnterior.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAnteriorActionPerformed(evt);
             }
         });
-
+        
         btnProximo.setText(">>");
         btnProximo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnProximoActionPerformed(evt);
             }
         });
-
+        
         btnUltimo.setText(">|");
         btnUltimo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUltimoActionPerformed(evt);
             }
         });
-
+        
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblId)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblDescricao)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblQuantidade)
-                        .addGap(18, 18, 18)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(lblId)
+            .addGap(18, 18, 18)
+            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(lblDescricao)
+            .addGap(18, 18, 18)
+            .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(lblQuantidade)
+            .addGap(18, 18, 18)
                         .addComponent(spnQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -202,12 +201,14 @@ public class FrmCadProduto extends javax.swing.JFrame {
                     .addComponent(btnUltimo))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
-
+        atualizarInterface();
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         limparCampos();
+        indice = -1;
+        atualizarInterface();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
@@ -222,27 +223,20 @@ public class FrmCadProduto extends javax.swing.JFrame {
             lista = dao.getProdutos();
             
             System.out.println("Produto salvo com sucesso: " + prod.toString());
-            
-            if (lista.size() - 1 == 0) {
-                btnPrimeiro.setEnabled(true);
-                btnUltimo.setEnabled(true);
-            }
-            else {
-                btnAnterior.setEnabled(true);
-            }
-            indice = lista.size() - 1;
-            mostrarDadosTela();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar produto!!!");
+        } finally {
+            indice = lista.size() - 1;
+            atualizarInterface();
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
          if (!lista.isEmpty()) {
-            String descricao = txtDescricao.getText();
+            int id = Integer.parseInt(txtId.getText());
             int pos = -1;
             for (int i = 0; i < lista.size(); i++) {
-                if (descricao.equals(lista.get(i).getDescricao())) {
+                if (id == (lista.get(i).getId())) {
                     pos = i;
                 }
             }
@@ -251,26 +245,10 @@ public class FrmCadProduto extends javax.swing.JFrame {
                         + lista.get(pos).toString(), "Excluir", JOptionPane.YES_NO_OPTION);
                 if (remover == JOptionPane.YES_OPTION) {
                     dao.excluirProduto(lista.get(pos).getId());
-                    lista.remove(pos);
-                    if(lista.isEmpty())
-                    {
-                        limparCampos();
-                        desabilitarTodosBotoes();
-
-                    }
-                    else
-                    {
-                        btnAnterior.setEnabled(false);
-                        if(lista.size()-1 == 0)
-                        {
-                           btnProximo.setEnabled(false);
-                        }
-                        indice=0;
-                        mostrarDadosTela();
-                    }
-                    
+                    lista = dao.getProdutos();
+                    indice = lista.size() - 1;
+                    atualizarInterface();
                 }
-                //pos = -1;
             } else {
                 JOptionPane.showMessageDialog(this, "O produto pesquisado não se encontra na lista");
             }
@@ -281,66 +259,31 @@ public class FrmCadProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnPrimeiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeiroActionPerformed
-        indice = 0;
-        mostrarDadosTela();
-        btnAnterior.setEnabled(false);
-        if(lista.size()-1 != 0)
-        {
-                btnProximo.setEnabled(true);
-        }
-        else
-        {
-             btnProximo.setEnabled(false);
+        if (indice != 0) {
+            indice = 0;
+            atualizarInterface();
         }
     }//GEN-LAST:event_btnPrimeiroActionPerformed
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
-        if(indice>0)
-        {
-            indice--;
-            mostrarDadosTela();
-            if(indice==0)
-            {
-                btnAnterior.setEnabled(false);
-                
-            }
-            if(lista.size()-1 != 0)
-            {
-                    btnProximo.setEnabled(true);
-            }
+        if (indice > 0) {
+            indice -= 1;
+            atualizarInterface();
         }
     }//GEN-LAST:event_btnAnteriorActionPerformed
 
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
-        if(indice<lista.size()-1)
-        {
-            indice++;
-            mostrarDadosTela();
-            if(indice==lista.size()-1)
-            {
-                btnProximo.setEnabled(false);
-                
-            }
-            if(lista.size()-1 != 0)
-            {
-                btnAnterior.setEnabled(true);
-            }
+        if (indice < lista.size() - 1) {
+            indice += 1;
+            atualizarInterface();
         }
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUltimoActionPerformed
-        indice = lista.size()-1;
-        mostrarDadosTela();
-        btnProximo.setEnabled(false);
-        if(lista.size()-1 != 0)
-        {
-            btnAnterior.setEnabled(true);
+        if (indice != lista.size() - 1) {
+            indice = lista.size() - 1;
+            atualizarInterface();
         }
-        else
-        {
-            btnAnterior.setEnabled(false);
-        }
-        
     }//GEN-LAST:event_btnUltimoActionPerformed
 
     /**
@@ -402,15 +345,55 @@ public void mostrarDadosTela() {
         txtDescricao.setText("");
         spnQuantidade.setValue(0);
         txtValor.setText("");
-        
     }
-    public void desabilitarTodosBotoes()
-{
-    btnPrimeiro.setEnabled(false);
-    btnUltimo.setEnabled(false);
-    btnProximo.setEnabled(false);
-    btnAnterior.setEnabled(false);
-}
 
+    public void atualizarInterface() {
+        if (lista.isEmpty()) {
+            limparCampos();
+            btnPrimeiro.setEnabled(false);
+            btnAnterior.setEnabled(false);
+            btnProximo.setEnabled(false);
+            btnUltimo.setEnabled(false);
+        } else {
+            if (indice < 0 && lista.size() >= 1) {
+                btnPrimeiro.setEnabled(false);
+                btnAnterior.setEnabled(false);
+                btnProximo.setEnabled(true);
+                btnUltimo.setEnabled(true);
+            } else if (indice < 0 && lista.size() <= 1) {
+                btnPrimeiro.setEnabled(false);
+                btnAnterior.setEnabled(false);
+                btnProximo.setEnabled(false);
+                btnUltimo.setEnabled(false);
+            }  else if (indice == 0 && lista.size() == 1) {
+                btnPrimeiro.setEnabled(false);
+                btnAnterior.setEnabled(false);
+                btnUltimo.setEnabled(false);
+                btnProximo.setEnabled(false);
+            } else if (indice == 0 && lista.size() > 1) {
+                btnPrimeiro.setEnabled(false);
+                btnAnterior.setEnabled(false);
+                btnUltimo.setEnabled(true);
+                btnProximo.setEnabled(true);
+            } else if (indice == lista.size() - 1) {
+                btnPrimeiro.setEnabled(true);
+                btnAnterior.setEnabled(true);
+                btnUltimo.setEnabled(false);
+                btnProximo.setEnabled(false);
+            } else {
+                btnPrimeiro.setEnabled(true);
+                btnAnterior.setEnabled(true);
+                btnUltimo.setEnabled(true);
+                btnProximo.setEnabled(true);
+            }
+        }
+        mostrarDadosTela();
+    }
 
+        public void desabilitarTodosBotoes() {
+        btnPrimeiro.setEnabled(false);
+        btnUltimo.setEnabled(false);
+        btnProximo.setEnabled(false);
+        btnAnterior.setEnabled(false);
+    }
 }
